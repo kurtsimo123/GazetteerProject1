@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Gazetteer</title>
+      <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+      <link rel="icon" href="favicon.ico" type="image/x-icon">
+      <!-- Load Bootstrap CSS -->
+      <link rel="stylesheet" href="libs/bootstrap-5.2.3-dist/css/bootstrap.min.css">
+      <!-- Load Font Awesome CSS -->
+      <link rel="stylesheet" href="libs/fontawesome-free-6.2.1-web/css/all.css" />
+      <!-- Load Leaflet CSS -->
+      <link rel="stylesheet" href="libs/Leaflet/leaflet.css" />
+      <!-- Load Extra Markers CSS -->
+      <link rel="stylesheet" href="libs/Leaflet.ExtraMarkers-master/dist/css/leaflet.extra-markers.min.css">
+      <!-- Load MarkerCluster CSS -->
+      <link rel="stylesheet" href="libs/Leaflet.markercluster-1.4.1/dist/MarkerCluster.css" />
+      <link rel="stylesheet" href="libs/Leaflet.markercluster-1.4.1/dist/MarkerCluster.Default.css" />
+      <!-- Load EasyButton CSS -->
+      <link rel="stylesheet" href="libs/Leaflet.EasyButton-master/src/easy-button.css" />
+      <!-- Load your custom CSS -->
+      <link rel="stylesheet" href="libs/css/style.css">
+   </head>
+   <body>
+      <!--country select-->
+      <span id="selectContainer">        
+         <select id="selCountry" class="form-select" name= "iso_a2" ></select>
+      </span>             
+      <div id="map"></div>
+      <div class="modal fade" id="countryModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="true" data-bs-keyboard="false">
+         <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h5 class="modal-title">Country Statistics</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+               </div>
+               <div class="modal-body">
+                  <table class="w-100">
+                     <tr>
+                        <td>Country:</td>
+                        <td id="txtCountry"></td>
+                     </tr>
+                     <tr>
+                        <td>Continent:</td>
+                        <td id="txtContinent"></td>
+                     </tr>
+                     <tr>
+                        <td>Capital:</td>
+                        <td id="txtCapital"></td>
+                     </tr>
+                     <tr>
+                        <td>Population:</td>
+                        <td id="txtPopulation"></td>
+                     </tr>
+                     <tr>
+                        <td>Currency:</td>
+                        <td id="txtCurrency"></td>
+                     </tr>
+                     <tr>
+                        <td id="txtFlag"></td>
+                        <td id="flag-result"></td>
+                     </tr>
+                  </table>
+               </div>
+            </div>
+         </div>
+      </div>
+      <!--wiki-->      
+      <div class="modal fade" id="wikiModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="true" data-bs-keyboard="false">
+         <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Country Summary</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+               </div>
+               <div class="modal-body">
+                  <table id="wikiInfo">
+                     <tr>
+                        <td>
+                           <p id="txtWikiCountrySummary"></p>
+                           <p id="txtWikiCountryLink"></p>
+                        </td>
+                     </tr>
+                  </table>
+               </div>
+            </div>
+         </div>
+      </div>
+      <!--weather-->
+      <!-- Weather Modal -->
+      <div class="modal fade" id="weatherModal" tabindex="-1" aria-labelledby="weatherModalLabel" aria-hidden="true">
+         <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h5 class="modal-title" id="weatherModalLabel">Weather</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+               </div>
+               <div class="modal-body">
+                  <table id="weatherInfo" class="table">
+                     <tr id="currentWeather">
+                        <td colspan="5">
+                           CURRENT WEATHER IS: 
+                           <p id="txtCurrentWeather"></p>
+                           <p id="weatherIcon"></p>
+                           <p id="txtWeatherDescription"></p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td id="next" colspan="5">Here's the forecast for the next 5 days:</td>
+                     </tr>
+                     <tr>
+                        <td>
+                           <p id="forecast1"></p>
+                           <p id="txtDay1"></p>
+                        </td>
+                        <td>
+                           <p id="forecast2"></p>
+                           <p id="txtDay2"></p>
+                        </td>
+                        <td>
+                           <p id="forecast3"></p>
+                           <p id="txtDay3"></p>
+                        </td>
+                        <td>
+                           <p id="forecast4"></p>
+                           <p id="txtDay4"></p>
+                        </td>
+                        <td>
+                           <p id="forecast5"></p>
+                           <p id="txtDay5"></p>
+                        </td>
+                     </tr>
+                  </table>
+               </div>
+            </div>
+         </div>
+      </div>
+      <!--Currency Converter-->
+      <!-- Currency Modal -->
+      <div class="modal fade" id="currencyModal" tabindex="-1" aria-labelledby="currencyModalLabel" aria-hidden="true">
+         <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h5 class="modal-title" id="currencyModalLabel">Current Exchange Rate</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+               </div>
+               <div class="modal-body">
+                  <table id="currencyInfo">
+                     <tr>
+                        <td>
+                           <p id="txtCurrencyRate"></p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td>
+                           <input type="number" id="convertAmount" placeholder="Please enter a number...">                       
+                           <button id="convertCurrency">
+                           <i class="fa-solid fa-calculator"></i>
+                           </button>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td id="convertResult"></td>
+                     </tr>
+                  </table>
+               </div>
+            </div>
+         </div>
+      </div>
+      <!--news-->
+      <!-- News Modal -->
+      <div class="modal fade" id="newsModal" tabindex="-1" aria-labelledby="newsModalLabel" aria-hidden="true">
+         <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h5 class="modal-title" id="newsModalLabel">Current News</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+               </div>
+               <div class="modal-body">
+                  <table id="newsInfo">
+                     <div id="news">
+                        <tr>
+                           <td>
+                              <p id="txtNews1"></p>
+                           </td>
+                           <td>
+                              <p id="txtLink1"></p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td>
+                              <p id="txtNews2"></p>
+                           </td>
+                           <td>
+                              <p id="txtLink2"></p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td>
+                              <p id="txtNews3"></p>
+                           </td>
+                           <td>
+                              <p id="txtLink3"></p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td>
+                              <p id="txtNews4"></p>
+                           </td>
+                           <td>
+                              <p id="txtLink4"></p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td>
+                              <p id="txtNews5"></p>
+                           </td>
+                           <td>
+                              <p id="txtLink5"></p>
+                           </td>
+                        </tr>
+                     </div>
+                  </table>
+               </div>
+            </div>
+         </div>
+      </div>
+      <!--bank hol-->
+      <!-- Holidays Modal -->
+      <div class="modal fade" id="holidaysModal" tabindex="-1" aria-labelledby="holidaysModalLabel" aria-hidden="true">
+         <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h5 class="modal-title" id="holidaysModalLabel">National Holidays</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+               </div>
+               <div class="modal-body">
+                  <table class="w-100" id="holInfo">
+                     <tr>
+                        <td id="holname">
+                           <p id="txtHolidaysName"></p>
+                        </td>
+                        <td id="holdate">
+                           <p id="txtHolidaysDate"></p>
+                        </td>
+                     </tr>
+                  </table>
+               </div>
+            </div>
+         </div>
+      </div>
+      <!-- Load JQUERY -->
+      <script src="libs/js/jquery-3.7.0.js"></script>
+      <!-- Load Leaflet JS -->
+      <script src="libs/Leaflet/leaflet.js"></script>
+      <!-- Load Extra Markers JS -->
+      <script src="libs/Leaflet.ExtraMarkers-master/dist/js/leaflet.extra-markers.min.js"></script>
+      <!-- Load MarkerCluster JS -->
+      <script src="libs/Leaflet.markercluster-1.4.1/dist/leaflet.markercluster-src.js"></script>
+      <!-- Load EasyButton JS -->
+      <script src="libs/Leaflet.EasyButton-master/src/easy-button.js"></script>
+      <!-- Load Bootstrap JS -->
+      <script src="libs/bootstrap-5.2.3-dist/js/bootstrap.min.js"></script>
+      <!-- Load Date JS -->
+      <script src="libs/js/date.js"></script>
+      <!-- Load MY JS -->
+      <script src="libs/js/main.js"></script>
+   </body>
+</html>
